@@ -1,50 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Utility -->
+    <!-- ── Utility ──────────────────────────────── -->
     <color name="white">#FFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="transparent">#00000000</color>
 
-    <!-- Brand -->
-    <color name="brand_primary">#00897B</color>
-    <color name="brand_primary_dark">#005F56</color>
-    <color name="brand_primary_container">#B2DFDB</color>
+    <!-- ── Brand: Forest Green ───────────────────── -->
+    <color name="brand_primary">#2E7D32</color>
+    <color name="brand_primary_variant">#1B5E20</color>
+    <color name="brand_primary_container">#C8E6C9</color>
     <color name="brand_on_primary">#FFFFFF</color>
-    <color name="brand_on_primary_container">#003731</color>
+    <color name="brand_on_primary_container">#003909</color>
 
-    <color name="brand_secondary">#FFB300</color>
-    <color name="brand_secondary_container">#FFE082</color>
+    <!-- ── Brand: Gold Accent ────────────────────── -->
+    <color name="brand_secondary">#F9A825</color>
+    <color name="brand_secondary_container">#FFF9C4</color>
     <color name="brand_on_secondary">#1A1200</color>
-    <color name="brand_on_secondary_container">#3D2F00</color>
+    <color name="brand_on_secondary_container">#2D1F00</color>
 
-    <color name="brand_error">#D32F2F</color>
+    <!-- ── Brand: Error/Alert ────────────────────── -->
+    <color name="brand_error">#C62828</color>
     <color name="brand_on_error">#FFFFFF</color>
-    <color name="brand_error_container">#FDECEA</color>
+    <color name="brand_error_container">#FFCDD2</color>
+    <color name="brand_on_error_container">#7F0000</color>
 
-    <!-- Light surfaces -->
-    <color name="md3_background_light">#F5FBF9</color>
-    <color name="md3_surface_light">#FAFFFE</color>
-    <color name="md3_surface_variant_light">#DAE5E2</color>
-    <color name="md3_surface_container_light">#EDF3F1</color>
-    <color name="md3_surface_container_high_light">#E7F0EE</color>
-    <color name="md3_on_background_light">#0E1F1D</color>
-    <color name="md3_on_surface_light">#0E1F1D</color>
-    <color name="md3_on_surface_variant_light">#3F4F4D</color>
-    <color name="md3_outline_light">#6F7F7D</color>
+    <!-- ── Light Theme Surfaces ──────────────────── -->
+    <color name="md3_background_light">#F6FBF4</color>
+    <color name="md3_surface_light">#FAFDF8</color>
+    <color name="md3_surface_variant_light">#D5E8D3</color>
+    <color name="md3_surface_container_light">#ECF3EA</color>
+    <color name="md3_surface_container_high_light">#E6F0E4</color>
+    <color name="md3_surface_container_low_light">#F2F8F0</color>
+    <color name="md3_on_background_light">#0F1F0F</color>
+    <color name="md3_on_surface_light">#0F1F0F</color>
+    <color name="md3_on_surface_variant_light">#3A4D3A</color>
+    <color name="md3_outline_light">#6A7F6A</color>
+    <color name="md3_outline_variant_light">#B8CFBA</color>
 
-    <!-- Dark surfaces -->
-    <color name="md3_background_dark">#0E1F1D</color>
-    <color name="md3_surface_dark">#161F1E</color>
-    <color name="md3_surface_variant_dark">#3F4F4D</color>
-    <color name="md3_surface_container_dark">#1E2C2A</color>
-    <color name="md3_surface_container_high_dark">#253533</color>
-    <color name="md3_on_background_dark">#DCF5F1</color>
-    <color name="md3_on_surface_dark">#DCF5F1</color>
-    <color name="md3_on_surface_variant_dark">#BDC9C7</color>
-    <color name="md3_outline_dark">#8A9E9B</color>
+    <!-- ── Charcoal text ─────────────────────────── -->
+    <color name="charcoal">#212121</color>
+    <color name="charcoal_medium">#424242</color>
+    <color name="charcoal_light">#757575</color>
 
-    <!-- Header wave overlay -->
-    <color name="header_wave_overlay">#1AFFFFFF</color>
-    <!-- Gold accent for decorative elements -->
-    <color name="accent_gold_light">#FFF8E1</color>
+    <!-- ── Splash decorative circles ─────────────── -->
+    <color name="circle_overlay">#15FFFFFF</color>
 </resources>

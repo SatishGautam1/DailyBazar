@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -12,75 +14,76 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.nighttech.dailybazar.R;
 import com.nighttech.dailybazar.databinding.ActivityLoginBinding;
-import com.nighttech.dailybazar.ui.activities.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Draw behind system bars — status bar area belongs to the app
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        mAuth = FirebaseAuth.getInstance();
 
         applyWindowInsets();
         playEntranceAnimations();
         setupListeners();
     }
 
-    /**
-     * Adjusts the header's statusBarSpacer height to match the real
-     * status bar so content sits below it naturally.
-     */
-    private void applyWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-
-            // Push header content below status bar
-            ViewGroup.LayoutParams spacerParams = binding.statusBarSpacer.getLayoutParams();
-            spacerParams.height = systemBars.top;
-            binding.statusBarSpacer.setLayoutParams(spacerParams);
-
-            return insets;
-        });
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is already signed in
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            navigateToMain();
+        }
     }
 
-    private void playEntranceAnimations() {
-        // Header slides down
-        binding.headerBand.setTranslationY(-60f);
-        binding.headerBand.setAlpha(0f);
-        binding.headerBand.animate()
-                .translationY(0f).alpha(1f)
-                .setDuration(500)
-                .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                .start();
+    private void applyWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
 
-        // Card rises from below
-        binding.cardLogin.setAlpha(0f);
-        binding.cardLogin.setTranslationY(80f);
-        binding.cardLogin.animate()
-                .alpha(1f).translationY(0f)
-                .setStartDelay(250).setDuration(550)
-                .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                .start();
+            ViewGroup.LayoutParams p = binding.statusBarSpacer.getLayoutParams();
+            p.height = systemBars.top;
+            binding.statusBarSpacer.setLayoutParams(p);
+
+            binding.scrollView.setPadding(
+                    binding.scrollView.getPaddingLeft(),
+                    binding.scrollView.getPaddingTop(),
+                    binding.scrollView.getPaddingRight(),
+                    imeInsets.bottom > 0 ? imeInsets.bottom : systemBars.bottom
+            );
+
+            return windowInsets;
+        });
     }
 
     private void setupListeners() {
         binding.btnLogin.setOnClickListener(v -> attemptLogin());
-
         binding.btnGoToSignUp.setOnClickListener(v -> {
             startActivity(new Intent(this, SignUpActivity.class));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         binding.btnForgotPassword.setOnClickListener(v -> {
-            // TODO: forgot password
+            String email = safeText(binding.etEmail);
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(this, "Enter email to reset password", Toast.LENGTH_SHORT).show();
+            } else {
+                mAuth.sendPasswordResetEmail(email).addOnSuccessListener(aVoid ->
+                        Toast.makeText(this, "Reset link sent to email", Toast.LENGTH_SHORT).show());
+            }
         });
     }
 
@@ -88,44 +91,57 @@ public class LoginActivity extends AppCompatActivity {
         binding.tilEmail.setError(null);
         binding.tilPassword.setError(null);
 
-        String email = binding.etEmail.getText() != null
-                ? binding.etEmail.getText().toString().trim() : "";
-        String password = binding.etPassword.getText() != null
-                ? binding.etPassword.getText().toString().trim() : "";
+        String email = safeText(binding.etEmail);
+        String password = safeText(binding.etPassword);
 
-        boolean valid = true;
-
-        if (TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.tilEmail.setError(getString(R.string.login_email_error));
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.tilEmail.setError("Invalid Email");
             shake(binding.tilEmail);
-            valid = false;
+            return;
         }
-        if (TextUtils.isEmpty(password) || password.length() < 6) {
-            binding.tilPassword.setError(getString(R.string.login_password_error));
+        if (password.length() < 6) {
+            binding.tilPassword.setError("Password too short");
             shake(binding.tilPassword);
-            valid = false;
+            return;
         }
 
-        if (valid) {
-            // Animate button, then navigate
-            binding.btnLogin.animate()
-                    .scaleX(0.96f).scaleY(0.96f).setDuration(100)
-                    .withEndAction(() ->
-                            binding.btnLogin.animate().scaleX(1f).scaleY(1f).setDuration(100)
-                                    .withEndAction(() -> {
-                                        Intent i = new Intent(this, MainActivity.class);
-                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(i);
-                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_in);
-                                    }).start()
-                    ).start();
-        }
+        binding.btnLogin.setEnabled(false);
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        navigateToMain();
+                    } else {
+                        binding.btnLogin.setEnabled(true);
+                        String error = task.getException() != null ? task.getException().getMessage() : "Login Failed";
+                        Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void navigateToMain() {
+        Intent i = new Intent(this, MainActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 
     private void shake(android.view.View view) {
-        android.view.animation.Animation anim =
-                android.view.animation.AnimationUtils.loadAnimation(this, R.anim.shake);
+        android.view.animation.Animation anim = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.shake);
         view.startAnimation(anim);
+    }
+
+    private String safeText(com.google.android.material.textfield.TextInputEditText et) {
+        return et.getText() != null ? et.getText().toString().trim() : "";
+    }
+
+    private void playEntranceAnimations() {
+        binding.headerBand.setAlpha(0f);
+        binding.headerBand.setTranslationY(-40f);
+        binding.headerBand.animate().alpha(1f).translationY(0f).setDuration(480).setInterpolator(new DecelerateInterpolator()).start();
+
+        binding.cardLogin.setAlpha(0f);
+        binding.cardLogin.setTranslationY(72f);
+        binding.cardLogin.animate().alpha(1f).translationY(0f).setStartDelay(220).setDuration(520).setInterpolator(new DecelerateInterpolator(1.5f)).start();
     }
 
     @Override

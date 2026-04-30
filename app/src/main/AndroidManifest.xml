@@ -12,38 +12,42 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyBazar">
 
-        <!-- 1. Splash Activity: Uses the special .Splash theme -->
+        <!-- Splash: no keyboard, themed green bg -->
         <activity
             android:name=".ui.activities.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.DailyBazar.Splash"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- 2. Login Activity -->
+        <!--
+            adjustResize: the window shrinks when keyboard appears.
+            The ScrollView in LoginActivity then has room to scroll the
+            focused field into view automatically — professional behavior.
+        -->
         <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- 3. Signup Activity -->
         <activity
             android:name=".ui.activities.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- 4. Main Dashboard -->
+        <!-- Main has no text input, so default is fine -->
         <activity
             android:name=".ui.activities.MainActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
 
     </application>
-
 </manifest>

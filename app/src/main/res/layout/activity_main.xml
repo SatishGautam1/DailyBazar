@@ -6,22 +6,24 @@
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground">
 
-    <!-- Fragment fills full screen; Java sets bottom padding = nav bar height -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- BottomNav sits at the bottom; Java sets bottom padding = system nav bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
+        style="@style/Widget.Material3.BottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_gravity="bottom"
-        android:background="?attr/colorSurface"
-        app:elevation="8dp"
+        app:activeIndicatorStyle="@style/Widget.DailyBazar.BottomNav.ActiveIndicator"
+        app:backgroundTint="?attr/colorSurfaceContainer"
+        app:itemActiveIndicatorColor="?attr/colorPrimaryContainer"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:itemRippleColor="?attr/colorPrimaryContainer"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemActiveIndicatorStyle="@style/Widget.DailyBazar.BottomNav.ActiveIndicator" />
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

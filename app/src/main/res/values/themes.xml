@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- ╔══════════════════════════════════════╗
+         ║     BASE APPLICATION THEME           ║
+         ╚══════════════════════════════════════╝ -->
     <style name="Theme.DailyBazar" parent="Theme.Material3.Light.NoActionBar">
+
+        <!-- Brand palette -->
         <item name="colorPrimary">@color/brand_primary</item>
         <item name="colorOnPrimary">@color/brand_on_primary</item>
         <item name="colorPrimaryContainer">@color/brand_primary_container</item>
@@ -12,42 +17,64 @@
         <item name="colorOnSecondaryContainer">@color/brand_on_secondary_container</item>
         <item name="colorError">@color/brand_error</item>
         <item name="colorOnError">@color/brand_on_error</item>
+        <item name="colorErrorContainer">@color/brand_error_container</item>
+        <item name="colorOnErrorContainer">@color/brand_on_error_container</item>
+
+        <!-- Surfaces -->
         <item name="android:colorBackground">@color/md3_background_light</item>
         <item name="colorSurface">@color/md3_surface_light</item>
         <item name="colorSurfaceVariant">@color/md3_surface_variant_light</item>
         <item name="colorSurfaceContainer">@color/md3_surface_container_light</item>
         <item name="colorSurfaceContainerHigh">@color/md3_surface_container_high_light</item>
+        <item name="colorSurfaceContainerLow">@color/md3_surface_container_low_light</item>
         <item name="colorOnBackground">@color/md3_on_background_light</item>
         <item name="colorOnSurface">@color/md3_on_surface_light</item>
         <item name="colorOnSurfaceVariant">@color/md3_on_surface_variant_light</item>
         <item name="colorOutline">@color/md3_outline_light</item>
+        <item name="colorOutlineVariant">@color/md3_outline_variant_light</item>
 
-        <!-- Edge-to-edge: app draws behind system bars -->
+        <!-- Edge-to-edge -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:navigationBarColor">@color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
+
+        <!-- Keyboard: content resizes so it's always visible above keyboard -->
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <!-- Splash: green bg, white icons -->
+    <!-- ╔══════════════════════════════════════╗
+         ║     SPLASH THEME                     ║
+         ╚══════════════════════════════════════╝ -->
     <style name="Theme.DailyBazar.Splash" parent="Theme.DailyBazar">
         <item name="android:windowBackground">@color/brand_primary</item>
-        <item name="android:statusBarColor">@color/transparent</item>
-        <item name="android:navigationBarColor">@color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
+        <!-- Splash doesn't need keyboard -->
+        <item name="android:windowSoftInputMode">stateHidden</item>
     </style>
 
-    <!-- BottomNav active indicator -->
+    <!-- ╔══════════════════════════════════════╗
+         ║     COMPONENT STYLES                 ║
+         ╚══════════════════════════════════════╝ -->
+
+    <!-- BottomNav active indicator pill -->
     <style name="Widget.DailyBazar.BottomNav.ActiveIndicator"
         parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/brand_primary_container</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.DailyBazar.BottomNav.Indicator</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
     </style>
 
-    <style name="ShapeAppearance.DailyBazar.BottomNav.Indicator"
-        parent="ShapeAppearance.Material3.Corner.Full">
+    <!-- Section chip/badge -->
+    <style name="Widget.DailyBazar.SectionBadge" parent="">
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
 </resources>

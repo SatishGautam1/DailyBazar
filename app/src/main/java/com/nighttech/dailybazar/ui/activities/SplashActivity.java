@@ -4,79 +4,102 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.nighttech.dailybazar.R;
 import com.nighttech.dailybazar.databinding.ActivitySplashBinding;
-import com.nighttech.dailybazar.ui.activities.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DELAY_MS = 2400L;
+    private static final long SPLASH_DELAY_MS = 2600L;
     private ActivitySplashBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Draw behind system bars
+        // Draw behind status bar — the green theme background covers it seamlessly
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         binding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        playEntranceAnimations();
+        // Pre-hide all animated elements so they start invisible
+        hideAll();
 
+        // Staggered entrance: logo → name → divider → tagline → bottom
+        new Handler(Looper.getMainLooper()).postDelayed(this::playEntranceAnimations, 100);
+
+        // Navigate after delay
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             overridePendingTransition(R.anim.fade_in, R.anim.fade_in);
             finish();
         }, SPLASH_DELAY_MS);
     }
 
-    private void playEntranceAnimations() {
-        // Logo card: scale from 0.6 → 1.0 + fade in
+    private void hideAll() {
         binding.ivLogo.setAlpha(0f);
-        binding.ivLogo.setScaleX(0.6f);
-        binding.ivLogo.setScaleY(0.6f);
-        binding.ivLogo.animate()
-                .alpha(1f).scaleX(1f).scaleY(1f)
-                .setStartDelay(150).setDuration(600)
-                .setInterpolator(new android.view.animation.OvershootInterpolator(1.2f))
-                .start();
+        binding.ivLogo.setScaleX(0.4f);
+        binding.ivLogo.setScaleY(0.4f);
 
-        // App name slides up
         binding.tvAppName.setAlpha(0f);
-        binding.tvAppName.setTranslationY(32f);
-        binding.tvAppName.animate()
-                .alpha(1f).translationY(0f)
-                .setStartDelay(450).setDuration(500)
-                .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                .start();
+        binding.tvAppName.setTranslationY(30f);
 
-        // Gold divider expands width
+        binding.dividerGold.setAlpha(0f);
         binding.dividerGold.setScaleX(0f);
-        binding.dividerGold.animate()
-                .scaleX(1f)
-                .setStartDelay(700).setDuration(400)
-                .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                .start();
 
-        // Tagline
         binding.tvTagline.setAlpha(0f);
-        binding.tvTagline.animate()
-                .alpha(0.75f)
-                .setStartDelay(800).setDuration(400)
+
+        binding.bottomSection.setAlpha(0f);
+        binding.bottomSection.setTranslationY(20f);
+    }
+
+    private void playEntranceAnimations() {
+        // 1. Logo: zoom in with overshoot bounce
+        binding.ivLogo.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(650)
+                .setInterpolator(new OvershootInterpolator(1.4f))
                 .start();
 
-        // Bottom section fades in
-        binding.bottomSection.setAlpha(0f);
+        // 2. App name: slides up and fades in
+        binding.tvAppName.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setStartDelay(400)
+                .setDuration(500)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        // 3. Gold divider: expands from center
+        binding.dividerGold.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .setStartDelay(650)
+                .setDuration(400)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        // 4. Tagline: fades in gently
+        binding.tvTagline.animate()
+                .alpha(0.72f)
+                .setStartDelay(800)
+                .setDuration(450)
+                .start();
+
+        // 5. Bottom section: slides up and fades in
         binding.bottomSection.animate()
                 .alpha(1f)
-                .setStartDelay(1000).setDuration(500)
+                .translationY(0f)
+                .setStartDelay(950)
+                .setDuration(500)
+                .setInterpolator(new DecelerateInterpolator())
                 .start();
     }
 
