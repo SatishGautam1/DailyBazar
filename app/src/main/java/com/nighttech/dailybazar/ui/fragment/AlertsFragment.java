@@ -4,25 +4,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.nighttech.dailybazar.R;
+import com.nighttech.dailybazar.databinding.FragmentAlertsBinding;
 
 public class AlertsFragment extends Fragment {
+
+    private FragmentAlertsBinding binding;
+
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        TextView tv = new TextView(requireContext());
-        tv.setText(R.string.alerts_placeholder);
-        tv.setGravity(android.view.Gravity.CENTER);
-        tv.setTextSize(16f);
-        tv.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        return tv;
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // This class is now generated automatically from fragment_alerts.xml
+        binding = FragmentAlertsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

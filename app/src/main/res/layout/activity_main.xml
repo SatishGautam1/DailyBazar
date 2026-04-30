@@ -1,29 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Root is a CoordinatorLayout so AppBarLayout can drive lift-on-scroll behavior
+    for any nested scrolling content in the fragment container.
+
+    IMPORTANT — add this to res/values/styles.xml (or themes.xml):
+    ──────────────────────────────────────────────────────────────
+    <style name="ShapeAppearance.App.CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    ──────────────────────────────────────────────────────────────
+    Your app theme must also extend a Material3 theme, e.g.:
+        Theme.Material3.DayNight.NoActionBar
+-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    tools:context=".ui.activities.MainActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainer"
+    <!-- ═══════════════════════════════════════════
+         TOP APP BAR
+         fitsSystemWindows=false here; insets applied
+         programmatically in MainActivity for
+         precise, pixel-perfect control.
+    ═══════════════════════════════════════════ -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        app:liftOnScroll="true">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="DailyBazar"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge">
+
+            <!--
+                Circular profile avatar — lives inside the Toolbar as a
+                secondary entry point to the Profile section.
+                layout_gravity="end" pushes it flush to the trailing edge.
+            -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_profile_avatar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="Profile"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="2dp" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ═══════════════════════════════════════════
+         FRAGMENT CONTAINER
+         scrolling_view_behavior keeps it below the
+         AppBarLayout; top padding for status bar
+         is applied programmatically.
+    ═══════════════════════════════════════════ -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- ═══════════════════════════════════════════
+         MATERIAL 3 BOTTOM NAVIGATION BAR
+         M3's NavigationBar renders the pill-shaped
+         active indicator automatically when using a
+         Material3 theme. Bottom padding for the
+         gesture/nav bar is applied programmatically.
+    ═══════════════════════════════════════════ -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        style="@style/Widget.Material3.BottomNavigationView"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:activeIndicatorStyle="@style/Widget.DailyBazar.BottomNav.ActiveIndicator"
-        app:backgroundTint="?attr/colorSurfaceContainer"
-        app:itemActiveIndicatorColor="?attr/colorPrimaryContainer"
-        app:itemIconTint="@color/nav_item_color"
-        app:itemTextColor="@color/nav_item_color"
-        app:itemRippleColor="?attr/colorPrimaryContainer"
+        app:menu="@menu/menu_bottom_nav"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
+        style="@style/Widget.Material3.BottomNavigationView" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

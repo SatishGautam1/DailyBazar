@@ -47,9 +47,13 @@
     <string name="nav_history">History</string>
     <string name="market_placeholder">Market dashboard coming soon</string>
     <string name="alerts_placeholder">Price alerts coming soon</string>
+    <string name="alerts_empty_state">No Active Alerts</string>
     <string name="history_placeholder">Price history coming soon</string>
 
     <!-- Main welcome -->
     <string name="main_greeting">Good morning 👋</string>
     <string name="main_subtitle">Here\'s what\'s trending in Nepal today.</string>
+
+    <string name="market_search_hint">Search vegetables, fruits…</string>
+
 </resources>

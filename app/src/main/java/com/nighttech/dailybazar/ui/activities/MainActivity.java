@@ -14,124 +14,176 @@ import com.nighttech.dailybazar.databinding.ActivityMainBinding;
 import com.nighttech.dailybazar.ui.fragment.AlertsFragment;
 import com.nighttech.dailybazar.ui.fragment.HistoryFragment;
 import com.nighttech.dailybazar.ui.fragment.MarketFragment;
+import com.nighttech.dailybazar.ui.fragment.ProfileFragment;
 
+/**
+ * MainActivity — single-activity host for DailyBazar.
+ *
+ * Key responsibilities:
+ *  • Edge-to-edge window rendering via WindowCompat
+ *  • Precise inset distribution (status bar → toolbar, nav bar → bottom nav)
+ *  • Fragment switching via FragmentManager (no NavComponent dependency)
+ *  • State preservation across configuration changes (rotation)
+ *  • Secondary profile entry via the Toolbar avatar
+ */
 public class MainActivity extends AppCompatActivity {
 
+    // ── ViewBinding ──────────────────────────────────────────────────────────
     private ActivityMainBinding binding;
 
-    // Cached so applyWindowInsets() can reference the real measured height
-    // after the BottomNavigationView has been laid out.
-    private static final int BOTTOM_NAV_HEIGHT_DP = 80;
+    // ── State ────────────────────────────────────────────────────────────────
+    /** Persisted across rotation so the correct nav item is re-selected. */
+    private static final String KEY_SELECTED_NAV = "selected_nav_item";
+    private int currentNavId = R.id.nav_market;
+
+    /**
+     * Guards against re-loading the fragment that the FragmentManager already
+     * restored automatically after a configuration change.
+     */
+    private boolean isRestoringNavState = false;
+
+    // ════════════════════════════════════════════════════════════════════════
+    //  Lifecycle
+    // ════════════════════════════════════════════════════════════════════════
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Must be called BEFORE setContentView so the window is transparent
-        // behind system bars before any view is drawn.
+        // ① Edge-to-edge — must be called BEFORE super.onCreate so the
+        //   decor is configured before the window is attached.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        applyWindowInsets();
-        setupBottomNavigation();
-
-        // Only set the default tab on a fresh launch, not on config change.
-        if (savedInstanceState == null) {
-            binding.bottomNavigationView.setSelectedItemId(R.id.nav_market);
+        // Use MaterialToolbar as the ActionBar (required for proper M3 styling).
+        setSupportActionBar(binding.toolbar);
+        if (getSupportActionBar() != null) {
+            // Title is already set in XML; suppress the default ActionBar title
+            // so the Toolbar's own title takes precedence.
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
+
+        applyWindowInsets();
+        setupBottomNavigation(savedInstanceState);
+        setupProfileAvatar();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_SELECTED_NAV, currentNavId);
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    //  Window Insets
+    // ════════════════════════════════════════════════════════════════════════
+
     /**
-     * INSET STRATEGY
-     * ─────────────────────────────────────────────────────────────────
-     * ┌─ Status bar ───────────────────────────┐  ← insets.top
-     * │  FragmentContainerView (paddingTop)    │
-     * │                                        │
-     * │  … fragment content …                  │
-     * │                                        │
-     * │  FragmentContainerView (paddingBottom) │  ← navBarHeight + bottomNavHeight
-     * ├─ BottomNavigationView (80dp) ──────────┤
-     * │  BottomNav (paddingBottom)             │  ← insets.bottom (gesture bar)
-     * └────────────────────────────────────────┘
+     * Distributes system-bar insets to the correct UI surfaces:
+     *   • Status-bar height  → top padding of the AppBarLayout
+     *   • Nav-bar / gesture-bar height → bottom padding of BottomNavigationView
      *
-     * Why this works:
-     *   • The BottomNav sits flush at the bottom of the screen. Its own
-     *     paddingBottom lifts its content (icons + labels) above the
-     *     gesture/navigation bar.
-     *   • The FragmentContainer fills the entire window. Its paddingBottom
-     *     accounts for BOTH the gesture bar AND the full BottomNav so that
-     *     scrollable content is never clipped behind the nav bar.
-     *   • Left/right insets handle display cutouts on landscape devices.
+     * The fragment container itself does NOT need top padding because it sits
+     * below the AppBarLayout via appbar_scrolling_view_behavior.
      */
     private void applyWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(
-                    WindowInsetsCompat.Type.systemBars() |
-                            WindowInsetsCompat.Type.displayCutout()
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            // Push the AppBar below the status bar.
+            binding.appBarLayout.setPadding(
+                    0, systemBars.top, 0, 0
             );
 
-            float density = getResources().getDisplayMetrics().density;
-            int bottomNavHeightPx = Math.round(BOTTOM_NAV_HEIGHT_DP * density);
-
-            // BottomNav: add bottom padding so icons sit above the gesture bar.
-            binding.bottomNavigationView.setPadding(
-                    0,
-                    0,
-                    0,
-                    insets.bottom
+            // Push the Bottom Nav above the gesture / navigation bar.
+            binding.bottomNavigation.setPadding(
+                    binding.bottomNavigation.getPaddingLeft(),
+                    binding.bottomNavigation.getPaddingTop(),
+                    binding.bottomNavigation.getPaddingRight(),
+                    systemBars.bottom
             );
 
-            // FragmentContainer: full edge-to-edge with reserved space at top and bottom.
-            binding.fragmentContainer.setPadding(
-                    insets.left,
-                    insets.top,
-                    insets.right,
-                    insets.bottom + bottomNavHeightPx   // clears gesture bar + bottom nav
-            );
-
+            // Return CONSUMED so child views don't re-process the same insets.
             return WindowInsetsCompat.CONSUMED;
         });
     }
 
-    private void setupBottomNavigation() {
-        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
+    // ════════════════════════════════════════════════════════════════════════
+    //  Bottom Navigation
+    // ════════════════════════════════════════════════════════════════════════
 
-            if (id == R.id.nav_market) {
-                loadFragment(new MarketFragment());
-                return true;
-            } else if (id == R.id.nav_alerts) {
-                loadFragment(new AlertsFragment());
-                return true;
-            } else if (id == R.id.nav_history) {
-                loadFragment(new HistoryFragment());
+    private void setupBottomNavigation(Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            // Configuration change: restore the previously selected tab ID.
+            // The FragmentManager has already restored the fragment itself —
+            // we only need to restore the visual selection in the nav bar
+            // WITHOUT triggering the listener (which would replace the fragment).
+            currentNavId = savedInstanceState.getInt(KEY_SELECTED_NAV, R.id.nav_market);
+            isRestoringNavState = true;
+        }
+
+        // Register listener BEFORE calling setSelectedItemId so the pill
+        // indicator animates on first launch.
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            if (isRestoringNavState) {
+                // Visual state restored — do NOT replace the FM-managed fragment.
+                isRestoringNavState = false;
                 return true;
             }
-            return false;
+            currentNavId = item.getItemId();
+            loadFragment(buildFragmentFor(currentNavId));
+            return true;
+        });
+
+        if (savedInstanceState == null) {
+            // Fresh launch: trigger the default selection via the listener.
+            binding.bottomNavigation.setSelectedItemId(R.id.nav_market);
+        } else {
+            // Rotation: restore visual selection only (listener skips due to flag).
+            binding.bottomNavigation.setSelectedItemId(currentNavId);
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    //  Profile Avatar (secondary entry point)
+    // ════════════════════════════════════════════════════════════════════════
+
+    private void setupProfileAvatar() {
+        binding.ivProfileAvatar.setOnClickListener(v -> {
+            // Sync the bottom nav indicator with the programmatic navigation.
+            if (currentNavId != R.id.nav_profile) {
+                currentNavId = R.id.nav_profile;
+                binding.bottomNavigation.setSelectedItemId(R.id.nav_profile);
+                // setSelectedItemId fires the listener which calls loadFragment.
+            }
         });
     }
 
+    // ════════════════════════════════════════════════════════════════════════
+    //  Fragment Helpers
+    // ════════════════════════════════════════════════════════════════════════
+
     /**
-     * Replaces the fragment with a smooth cross-fade.
-     * fade_in is used for both enter and exit so neither fragment
-     * "slides" — it just dissolves cleanly.
+     * Replaces the fragment container contents.
+     * Uses replace() so only one fragment is ever active at a time, keeping
+     * memory usage low for an informational app.
      */
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(
-                        R.anim.fade_in,   // enter
-                        R.anim.fade_out   // exit  ← use fade_out, not fade_in again
-                )
-                .replace(R.id.fragmentContainer, fragment)
+                .setReorderingAllowed(true)          // Required for predictive back
+                .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        binding = null;   // prevent memory leaks after the Activity is gone
+    /** Maps a nav menu item ID to the corresponding Fragment instance. */
+    private Fragment buildFragmentFor(int navId) {
+        if (navId == R.id.nav_alerts)  return new AlertsFragment();
+        if (navId == R.id.nav_history) return new HistoryFragment();
+        if (navId == R.id.nav_profile) return new ProfileFragment();
+        return new MarketFragment(); // default / nav_market
     }
 }
