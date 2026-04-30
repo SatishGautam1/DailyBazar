@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Global TextInput Style -->
+    <style name="Widget.DailyBazar.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <!-- Rounded corners -->
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+
+        <!-- Stroke Width -->
+        <item name="boxStrokeWidth">1.5dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+
+        <!-- Active state colors -->
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="hintTextColor">?attr/colorPrimary</item>
+        <item name="startIconTint">?attr/colorPrimary</item>
+
+        <!-- Spacing -->
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
+
+    <!-- Global Button Style -->
+    <style name="Widget.DailyBazar.Button" parent="Widget.Material3.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.DailyBazar.Button</item>
+    </style>
+
+    <style name="ShapeAppearance.DailyBazar.Button" parent="">
+        <item name="cornerSize">14dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary">
+
+    <!-- Decorative circle top-right -->
+    <View
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="-80dp"
+        android:layout_marginEnd="-80dp"
+        android:background="@drawable/shape_circle_white_alpha"
+        android:elevation="0dp" />
+
+    <!-- Decorative circle bottom-left -->
+    <View
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="-60dp"
+        android:layout_marginStart="-60dp"
+        android:background="@drawable/shape_circle_white_alpha"
+        android:elevation="0dp" />
+
+    <!-- Center content: logo + text -->
+    <LinearLayout
+        android:id="@+id/centerContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="80dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- Logo card — elevated white circle -->
+        <FrameLayout
+            android:layout_width="128dp"
+            android:layout_height="128dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                app:cardCornerRadius="64dp"
+                app:cardElevation="16dp"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <ImageView
+                    android:id="@+id/ivLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/logo"
+                    android:padding="16dp"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="@string/app_name" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/app_name"
+            android:textColor="@color/brand_on_primary"
+            android:textSize="38sp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.02" />
+
+        <!-- Gold divider line under title -->
+        <View
+            android:id="@+id/dividerGold"
+            android:layout_width="48dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/brand_secondary"
+            android:alpha="0.9" />
+
+        <TextView
+            android:id="@+id/tvTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/app_tagline"
+            android:textColor="@color/brand_on_primary"
+            android:textSize="12sp"
+            android:alpha="0.75"
+            android:letterSpacing="0.12"
+            android:textAllCaps="true" />
+
+    </LinearLayout>
+
+    <!-- Bottom progress section -->
+    <LinearLayout
+        android:id="@+id/bottomSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="52dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indicatorColor="@color/brand_on_primary"
+            app:trackColor="#33FFFFFF"
+            app:indicatorSize="32dp"
+            app:trackThickness="3dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/splash_loading"
+            android:textColor="@color/brand_on_primary"
+            android:textSize="12sp"
+            android:alpha="0.60"
+            android:letterSpacing="0.06" />
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Daily-Bazar</string>
+    <string name="app_tagline">Smart Price Watch Nepal</string>
+
+    <!-- Splash -->
+    <string name="splash_loading">Loading market data…</string>
+
+    <!-- Login -->
+    <string name="login_welcome_title">Welcome Back</string>
+    <string name="login_welcome_subtitle">Track prices smarter, shop better.</string>
+    <string name="login_email_hint">Email Address</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Log In</string>
+    <string name="login_forgot_password">Forgot Password?</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_sign_up">Sign Up</string>
+    <string name="login_email_error">Please enter a valid email address</string>
+    <string name="login_password_error">Password must be at least 6 characters</string>
+
+    <!-- Sign Up -->
+    <string name="signup_title">Create Account</string>
+    <string name="signup_subtitle">Join Daily-Bazar and start saving.</string>
+    <string name="signup_full_name_hint">Full Name</string>
+    <string name="signup_phone_hint">Phone Number</string>
+    <string name="signup_email_hint">Email Address</string>
+    <string name="signup_password_hint">Password</string>
+    <string name="signup_confirm_password_hint">Confirm Password</string>
+    <string name="signup_button">Create Account</string>
+    <string name="signup_have_account">Already have an account?</string>
+    <string name="signup_log_in">Log In</string>
+    <string name="signup_name_error">Full name is required</string>
+    <string name="signup_phone_error">Enter a valid 10-digit phone number</string>
+    <string name="signup_email_error">Please enter a valid email address</string>
+    <string name="signup_password_error">Password must be at least 6 characters</string>
+    <string name="signup_confirm_password_error">Passwords do not match</string>
+    <string name="back">Back</string>
+
+    <!-- Main / Bottom Nav -->
+    <string name="nav_market">Market</string>
+    <string name="nav_alerts">Alerts</string>
+    <string name="nav_history">History</string>
+
+    <!-- Placeholders -->
+    <string name="market_placeholder">Market dashboard coming soon</string>
+    <string name="alerts_placeholder">Price alerts coming soon</string>
+    <string name="history_placeholder">Price history coming soon</string>
+
+    <!-- Add these to your existing strings.xml -->
+    <string name="login_enter_creds">Sign in to track Nepal\'s best prices.</string>
+
+</resources>

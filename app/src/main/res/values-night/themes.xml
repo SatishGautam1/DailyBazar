@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.DailyBazar" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorOnPrimary">@color/brand_on_primary</item>
+        <item name="colorPrimaryContainer">@color/brand_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/brand_on_primary_container</item>
+        <item name="colorSecondary">@color/brand_secondary</item>
+        <item name="colorOnSecondary">@color/brand_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/brand_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/brand_on_secondary_container</item>
+        <item name="colorError">@color/brand_error</item>
+        <item name="colorOnError">@color/brand_on_error</item>
+        <item name="android:colorBackground">@color/md3_background_dark</item>
+        <item name="colorSurface">@color/md3_surface_dark</item>
+        <item name="colorSurfaceVariant">@color/md3_surface_variant_dark</item>
+        <item name="colorSurfaceContainer">@color/md3_surface_container_dark</item>
+        <item name="colorSurfaceContainerHigh">@color/md3_surface_container_high_dark</item>
+        <item name="colorOnBackground">@color/md3_on_background_dark</item>
+        <item name="colorOnSurface">@color/md3_on_surface_dark</item>
+        <item name="colorOnSurfaceVariant">@color/md3_on_surface_variant_dark</item>
+        <item name="colorOutline">@color/md3_outline_dark</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <style name="Theme.DailyBazar.Splash" parent="Theme.DailyBazar">
+        <item name="android:windowBackground">@color/brand_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <style name="Widget.DailyBazar.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">14dp</item>
+        <item name="boxCornerRadiusTopEnd">14dp</item>
+        <item name="boxCornerRadiusBottomStart">14dp</item>
+        <item name="boxCornerRadiusBottomEnd">14dp</item>
+        <item name="boxStrokeWidth">1.5dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+    </style>
+
+    <style name="Widget.DailyBazar.BottomNav.ActiveIndicator"
+        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/brand_primary_container</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.DailyBazar.BottomNav.Indicator</item>
+    </style>
+
+    <style name="ShapeAppearance.DailyBazar.BottomNav.Indicator"
+        parent="ShapeAppearance.Material3.Corner.Full">
+    </style>
+
+</resources>
