@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    fragment_market.xml — Premium redesign
+    Design direction: Editorial dashboard with hero stats + living grid
+    - Large date hero band with gradient overlay feel via PrimaryContainer
+    - Floating glass-style search bar
+    - Shimmer skeleton in shimmer_layout
+    - Clean section label with item count chip
+-->
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,131 +18,148 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?android:attr/colorBackground"
         android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="96dp">
+            android:paddingBottom="104dp">
 
-            <!-- ── 1. MARKET PULSE CARD ──────────────── -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_market_pulse"
+            <!-- ── HERO DATE BAND ───────────────────────────── -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                app:cardBackgroundColor="?attr/colorPrimaryContainer"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                android:background="?attr/colorPrimaryContainer"
+                android:orientation="vertical"
+                android:paddingStart="22dp"
+                android:paddingTop="22dp"
+                android:paddingEnd="22dp"
+                android:paddingBottom="20dp">
 
+                <!-- Label above date -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/market_pulse"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.10"
+                    android:textAllCaps="true"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:alpha="0.65" />
+
+                <!-- Date + status row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="20dp">
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tv_today_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:textSize="22sp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        tools:text="Thursday, 30 Apr 2025" />
+
+                    <!-- Compact LIVE pill -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_live_badge"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="11dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp">
+
+                        <View
+                            android:layout_width="6dp"
+                            android:layout_height="6dp"
+                            android:layout_marginEnd="5dp"
+                            android:background="@drawable/bg_status_dot" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/market_pulse"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:alpha="0.75"
-                            android:fontFamily="@font/mukta_medium" />
-
-                        <TextView
-                            android:id="@+id/tv_today_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:fontFamily="@font/montserrat_semibold"
-                            tools:text="Thursday, 30 Apr 2025" />
+                            android:text="LIVE"
+                            android:textSize="10sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:textColor="@color/brand_error"
+                            android:letterSpacing="0.08" />
 
                     </LinearLayout>
 
-                    <!-- Status badge -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/card_status_badge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:cardBackgroundColor="?attr/colorPrimary"
-                        app:cardCornerRadius="50dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="0dp">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="12dp"
-                            android:paddingTop="6dp"
-                            android:paddingEnd="12dp"
-                            android:paddingBottom="6dp">
-
-                            <View
-                                android:layout_width="8dp"
-                                android:layout_height="8dp"
-                                android:background="@drawable/bg_status_dot"
-                                android:layout_marginEnd="6dp" />
-
-                            <TextView
-                                android:id="@+id/tv_market_status"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/market_status_stable"
-                                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                                android:textColor="?attr/colorOnPrimary"
-                                android:fontFamily="@font/mukta_medium" />
-
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- ── 2. SEARCH FIELD ───────────────────── -->
+                <!-- Market status subtitle -->
+                <TextView
+                    android:id="@+id/tv_market_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/market_status_stable"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/mukta_regular"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:alpha="0.72" />
+
+            </LinearLayout>
+
+            <!-- ── SEARCH BAR ─────────────────────────────── -->
             <!--
-                Using TextInputLayout + TextInputEditText instead of M3 SearchBar.
-                MarketFragment.java references binding.etSearch (plain EditText),
-                which is what TextInputEditText generates via ViewBinding.
+                Elevated card + TextInputLayout combo gives the appearance of
+                a floating pill search bar that sits just below the hero band.
             -->
-            <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                style="@style/Widget.DailyBazar.TextInputLayout"
-                android:hint="@string/search_hint"
-                app:startIconDrawable="@drawable/ic_search"
-                app:startIconTint="?attr/colorOnSurfaceVariant">
+                app:cardCornerRadius="50dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="0.6dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_search"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:imeOptions="actionSearch"
-                    android:singleLine="true"
-                    android:fontFamily="@font/mukta_regular" />
+                    android:layout_height="52dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:hint="@string/search_hint"
+                    app:boxBackgroundMode="none"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:startIconDrawable="@drawable/ic_search"
+                    app:startIconTint="?attr/colorOnSurfaceVariant"
+                    app:hintEnabled="false">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="text"
+                        android:imeOptions="actionSearch"
+                        android:singleLine="true"
+                        android:fontFamily="@font/mukta_regular"
+                        android:hint="@string/search_hint"
+                        android:background="@android:color/transparent"
+                        android:textSize="15sp"
+                        android:paddingStart="4dp" />
 
-            <!-- ── 3. SHIMMER SKELETON ──────────────── -->
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ── SHIMMER SKELETON ────────────────────────── -->
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmer_layout"
                 android:layout_width="match_parent"
@@ -157,33 +182,33 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_margin="4dp" />
+                            android:layout_margin="6dp" />
 
                         <include layout="@layout/item_skeleton_card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_margin="4dp" />
+                            android:layout_margin="6dp" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="0dp"
                         android:orientation="horizontal">
 
                         <include layout="@layout/item_skeleton_card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_margin="4dp" />
+                            android:layout_margin="6dp" />
 
                         <include layout="@layout/item_skeleton_card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_margin="4dp" />
+                            android:layout_margin="6dp" />
 
                     </LinearLayout>
 
@@ -191,42 +216,77 @@
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
-            <!-- ── 4. SECTION TITLE ──────────────────── -->
-            <TextView
+            <!-- ── SECTION HEADER ─────────────────────────── -->
+            <LinearLayout
                 android:id="@+id/tv_section_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/today_prices"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="?attr/colorOnSurface"
-                android:fontFamily="@font/montserrat_semibold"
-                android:visibility="gone" />
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-            <!-- ── 5. PRICE GRID ─────────────────────── -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/today_prices"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:fontFamily="@font/montserrat_semibold" />
+
+                <!-- Item count badge — updated by Java adapter observer if desired -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="100dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                    app:strokeWidth="0dp">
+
+                    <TextView
+                        android:id="@+id/tv_item_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:text="0 items"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/mukta_medium"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        tools:text="12 items" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- ── PRICE GRID ──────────────────────────────── -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_market_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:visibility="gone"
                 tools:listitem="@layout/item_market_card"
                 tools:itemCount="4"
                 tools:spanCount="2"
                 tools:layoutManager="GridLayoutManager" />
 
-            <!-- ── 6. EMPTY STATE ────────────────────── -->
+            <!-- ── EMPTY STATE ─────────────────────────────── -->
             <include
                 android:id="@+id/empty_state_market"
                 layout="@layout/layout_empty_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="56dp"
                 android:visibility="gone" />
 
         </LinearLayout>
