@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    IDs referenced in ProfileFragment.java:
-      swipe_refresh_profile   → SwipeRefreshLayout
-      iv_big_avatar           → ShapeableImageView
-      tv_profile_name         → name TextView
-      tv_profile_email        → email TextView
-      tv_profile_phone        → phone TextView
-      tv_member_date          → member since TextView
-      tv_market_preference    → preference TextView
-      tv_last_synced          → last synced timestamp
-      btn_edit_profile        → edit button
-      btn_logout              → sign out button
--->
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -62,14 +49,17 @@
                     android:fontFamily="@font/montserrat_bold"
                     android:textColor="?attr/colorOnPrimaryContainer" />
 
+                <!-- KYC Status Chip — color set programmatically -->
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_kyc_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="@string/verified_analyst"
+                    android:text="Unverified"
                     android:fontFamily="@font/mukta_medium"
-                    app:chipBackgroundColor="?attr/colorPrimary"
-                    android:textColor="?attr/colorOnPrimary"
+                    android:textColor="@android:color/white"
+                    android:clickable="false"
+                    android:focusable="false"
                     style="@style/Widget.Material3.Chip.Assist" />
 
             </LinearLayout>
@@ -88,7 +78,7 @@
                     android:layout_height="14dp"
                     android:src="@drawable/ic_history"
                     app:tint="?attr/colorOnSurfaceVariant"
-                    android:contentDescription="Sync" />
+                    android:contentDescription="@null" />
 
                 <TextView
                     android:id="@+id/tv_last_synced"
@@ -102,7 +92,7 @@
 
             </LinearLayout>
 
-            <!-- ── INFO CARD ─────────────────────── -->
+            <!-- ── BASIC INFO CARD ─────────────────────── -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,11 +111,11 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Email -->
+                    <!-- Email (Read Only - Primary Key) -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Email Address"
+                        android:text="Email Address (Login ID)"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:fontFamily="@font/mukta_medium"
                         android:textColor="?attr/colorPrimary" />
@@ -139,8 +129,11 @@
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                         android:fontFamily="@font/mukta_regular" />
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:layout_marginTop="14dp" android:layout_marginBottom="14dp"
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="14dp"
                         android:background="?attr/colorOutlineVariant" />
 
                     <!-- Phone -->
@@ -161,43 +154,24 @@
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                         android:fontFamily="@font/mukta_regular" />
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:layout_marginTop="14dp" android:layout_marginBottom="14dp"
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="14dp"
                         android:background="?attr/colorOutlineVariant" />
 
-                    <!-- Member since -->
+                    <!-- Address -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Member Since"
+                        android:text="Address"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:fontFamily="@font/mukta_medium"
                         android:textColor="?attr/colorPrimary" />
 
                     <TextView
-                        android:id="@+id/tv_member_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="…"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:fontFamily="@font/mukta_regular" />
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:layout_marginTop="14dp" android:layout_marginBottom="14dp"
-                        android:background="?attr/colorOutlineVariant" />
-
-                    <!-- Market preference -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Market Preference"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                        android:fontFamily="@font/mukta_medium"
-                        android:textColor="?attr/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/tv_market_preference"
+                        android:id="@+id/tv_profile_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -208,17 +182,142 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ── EDIT PROFILE ───────────────────── -->
+            <!-- ── KYC DOCUMENTS CARD ─────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:cardBackgroundColor="?attr/colorSurface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Verification Documents"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:textColor="?attr/colorOnSurface"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Citizenship Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Citizenship (Front/Back)"
+                            android:fontFamily="@font/mukta_medium"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/tv_status_citizenship"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Missing"
+                            android:fontFamily="@font/mukta_bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- NID Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="National ID (NID)"
+                            android:fontFamily="@font/mukta_medium"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/tv_status_nid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Missing"
+                            android:fontFamily="@font/mukta_bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ── KYC REJECTION REASON CARD (shown only when rejected) ── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_rejection_reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/design_default_color_error"
+                app:cardBackgroundColor="?attr/colorErrorContainer">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rejection Reason"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="?attr/colorOnErrorContainer"
+                        android:fontFamily="@font/mukta_bold" />
+
+                    <TextView
+                        android:id="@+id/tv_rejection_reason"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="—"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:textColor="?attr/colorOnErrorContainer"
+                        android:fontFamily="@font/mukta_regular" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ── UPLOAD / UPDATE KYC BUTTON ───────────────────── -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_edit_profile"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/edit_profile"
+                android:text="Upload KYC Documents"
                 android:fontFamily="@font/montserrat_semibold"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button"
                 app:cornerRadius="14dp" />
 
             <!-- ── SIGN OUT ───────────────────────── -->

@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    IDs referenced in EditProfileBottomSheet.java:
-      fl_avatar_container   → FrameLayout (tap to pick image)
-      iv_edit_avatar        → ShapeableImageView (current photo)
-      et_edit_name          → TextInputEditText (name)
-      et_edit_phone         → TextInputEditText (phone)
-      et_edit_pref          → TextInputEditText (market preference)
-      btn_save_profile      → MaterialButton (save)
-      progress_bar          → CircularProgressIndicator
--->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="@string/edit_profile"
+        android:text="Complete KYC Verification"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="?attr/colorOnSurface" />
@@ -58,7 +48,7 @@
             app:strokeColor="?attr/colorPrimary"
             app:strokeWidth="2dp" />
 
-        <!-- Camera overlay badge -->
+        <!-- Camera badge overlay -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="26dp"
             android:layout_height="26dp"
@@ -72,45 +62,39 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_profile"
-                app:tint="?attr/colorOnPrimary"
-                android:contentDescription="@string/edit_avatar" />
-
+                android:src="@android:drawable/ic_menu_camera"
+                android:contentDescription="@null"
+                app:tint="?attr/colorOnPrimary" />
         </com.google.android.material.card.MaterialCardView>
-
     </FrameLayout>
 
-    <!-- Name -->
+    <!-- Full Name -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_edit_name"
         style="@style/Widget.DailyBazar.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/profile_name_hint"
-        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-        app:startIconTint="?attr/colorPrimary">
+        android:hint="Full Name"
+        app:startIconDrawable="@android:drawable/ic_menu_myplaces">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_edit_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName|textCapWords"
-            android:imeOptions="actionNext"
-            android:singleLine="true"
-            android:fontFamily="@font/mukta_regular" />
-
+            android:fontFamily="@font/mukta_regular"
+            android:imeOptions="actionNext" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Phone -->
+    <!-- Phone Number -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_edit_phone"
         style="@style/Widget.DailyBazar.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:hint="@string/phone_hint"
+        android:layout_marginTop="12dp"
+        android:hint="Phone Number"
         app:startIconDrawable="@android:drawable/ic_menu_call"
-        app:startIconTint="?attr/colorPrimary"
         app:prefixText="+977 ">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -118,34 +102,134 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
-            android:imeOptions="actionNext"
-            android:singleLine="true"
             android:maxLength="10"
-            android:fontFamily="@font/mukta_regular" />
-
+            android:fontFamily="@font/mukta_regular"
+            android:imeOptions="actionNext" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Market preference -->
+    <!-- Address -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_edit_pref"
+        android:id="@+id/til_edit_address"
         style="@style/Widget.DailyBazar.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:hint="@string/profile_pref_hint"
-        app:startIconDrawable="@drawable/ic_storefront"
-        app:startIconTint="?attr/colorPrimary">
+        android:layout_marginTop="12dp"
+        android:hint="Current Address (e.g. Pokhara-15)"
+        app:startIconDrawable="@drawable/ic_storefront">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_edit_pref"
+            android:id="@+id/et_edit_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            android:fontFamily="@font/mukta_regular" />
-
+            android:fontFamily="@font/mukta_regular"
+            android:imeOptions="actionDone" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Documents section header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="8dp"
+        android:text="Upload Legal Documents"
+        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+        android:textColor="?attr/colorPrimary" />
+
+    <!-- Document upload slots -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <!-- Citizenship Front/Back Slot -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_upload_citizenship"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorOutlineVariant"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_citizenship_preview"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:id="@+id/tv_citizenship_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Citizenship"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:fontFamily="@font/mukta_medium" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- National ID Slot -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_upload_nid"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorOutlineVariant"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_nid_preview"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:id="@+id/tv_nid_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="National ID"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:fontFamily="@font/mukta_medium" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Upload note -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Tap a slot to select an image from your gallery. At least one document is required."
+        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:fontFamily="@font/mukta_regular" />
 
     <!-- Progress indicator -->
     <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -155,19 +239,15 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:indeterminate="true"
-        android:visibility="gone"
-        app:indicatorColor="?attr/colorPrimary"
-        app:trackColor="?attr/colorSurfaceVariant"
-        app:indicatorSize="32dp"
-        app:trackThickness="3dp" />
+        android:visibility="gone" />
 
-    <!-- Save -->
+    <!-- Submit button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_save_profile"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginTop="20dp"
-        android:text="@string/save_changes"
+        android:text="Submit for Verification"
         android:fontFamily="@font/montserrat_semibold"
         style="@style/Widget.DailyBazar.Button" />
 
