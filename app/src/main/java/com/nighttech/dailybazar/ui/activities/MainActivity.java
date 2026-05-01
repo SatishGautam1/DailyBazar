@@ -1,14 +1,25 @@
 package com.nighttech.dailybazar.ui.activities;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.google.android.material.transition.MaterialFadeThrough;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nighttech.dailybazar.R;
 import com.nighttech.dailybazar.databinding.ActivityMainBinding;
 import com.nighttech.dailybazar.ui.fragment.AlertsFragment;
@@ -16,88 +27,51 @@ import com.nighttech.dailybazar.ui.fragment.HistoryFragment;
 import com.nighttech.dailybazar.ui.fragment.MarketFragment;
 import com.nighttech.dailybazar.ui.fragment.ProfileFragment;
 
-/**
- * MainActivity — single-activity host for DailyBazar.
- *
- * Key responsibilities:
- *  • Edge-to-edge window rendering via WindowCompat
- *  • Precise inset distribution (status bar → toolbar, nav bar → bottom nav)
- *  • Fragment switching via FragmentManager (no NavComponent dependency)
- *  • State preservation across configuration changes (rotation)
- *  • Secondary profile entry via the Toolbar avatar
- */
 public class MainActivity extends AppCompatActivity {
 
-    // ── ViewBinding ──────────────────────────────────────────────────────────
     private ActivityMainBinding binding;
 
-    // ── State ────────────────────────────────────────────────────────────────
-    /** Persisted across rotation so the correct nav item is re-selected. */
     private static final String KEY_SELECTED_NAV = "selected_nav_item";
     private int currentNavId = R.id.nav_market;
-
-    /**
-     * Guards against re-loading the fragment that the FragmentManager already
-     * restored automatically after a configuration change.
-     */
     private boolean isRestoringNavState = false;
-
-    // ════════════════════════════════════════════════════════════════════════
-    //  Lifecycle
-    // ════════════════════════════════════════════════════════════════════════
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // ① Edge-to-edge — must be called BEFORE super.onCreate so the
-        //   decor is configured before the window is attached.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Use MaterialToolbar as the ActionBar (required for proper M3 styling).
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null) {
-            // Title is already set in XML; suppress the default ActionBar title
-            // so the Toolbar's own title takes precedence.
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
         applyWindowInsets();
         setupBottomNavigation(savedInstanceState);
+        setupNavigationDrawer();
         setupProfileAvatar();
+        updateToolbarProfileIcon();
+        syncProfileData();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_SELECTED_NAV, currentNavId);
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  Window Insets
-    // ════════════════════════════════════════════════════════════════════════
+    // ── Insets ────────────────────────────────────────────────────────────────
 
-    /**
-     * Distributes system-bar insets to the correct UI surfaces:
-     *   • Status-bar height  → top padding of the AppBarLayout
-     *   • Nav-bar / gesture-bar height → bottom padding of BottomNavigationView
-     *
-     * The fragment container itself does NOT need top padding because it sits
-     * below the AppBarLayout via appbar_scrolling_view_behavior.
-     */
     private void applyWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
 
-            // Push the AppBar below the status bar.
-            binding.appBarLayout.setPadding(
-                    0, systemBars.top, 0, 0
-            );
+            // Status bar → AppBarLayout top padding
+            binding.appBarLayout.setPadding(0, systemBars.top, 0, 0);
 
-            // Push the Bottom Nav above the gesture / navigation bar.
+            // Nav bar → BottomNav bottom padding
             binding.bottomNavigation.setPadding(
                     binding.bottomNavigation.getPaddingLeft(),
                     binding.bottomNavigation.getPaddingTop(),
@@ -105,31 +79,20 @@ public class MainActivity extends AppCompatActivity {
                     systemBars.bottom
             );
 
-            // Return CONSUMED so child views don't re-process the same insets.
             return WindowInsetsCompat.CONSUMED;
         });
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  Bottom Navigation
-    // ════════════════════════════════════════════════════════════════════════
+    // ── Bottom Navigation ────────────────────────────────────────────────────
 
     private void setupBottomNavigation(Bundle savedInstanceState) {
-
         if (savedInstanceState != null) {
-            // Configuration change: restore the previously selected tab ID.
-            // The FragmentManager has already restored the fragment itself —
-            // we only need to restore the visual selection in the nav bar
-            // WITHOUT triggering the listener (which would replace the fragment).
             currentNavId = savedInstanceState.getInt(KEY_SELECTED_NAV, R.id.nav_market);
             isRestoringNavState = true;
         }
 
-        // Register listener BEFORE calling setSelectedItemId so the pill
-        // indicator animates on first launch.
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             if (isRestoringNavState) {
-                // Visual state restored — do NOT replace the FM-managed fragment.
                 isRestoringNavState = false;
                 return true;
             }
@@ -139,51 +102,145 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (savedInstanceState == null) {
-            // Fresh launch: trigger the default selection via the listener.
             binding.bottomNavigation.setSelectedItemId(R.id.nav_market);
         } else {
-            // Rotation: restore visual selection only (listener skips due to flag).
             binding.bottomNavigation.setSelectedItemId(currentNavId);
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  Profile Avatar (secondary entry point)
-    // ════════════════════════════════════════════════════════════════════════
+    private void setupNavigationDrawer() {
+        // Link Toolbar menu icon to Drawer
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, binding.drawerLayout, binding.toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        binding.drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // Handle Drawer Item Clicks
+        binding.navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_settings) {
+                // Open Settings Activity
+            } else if (id == R.id.nav_about) {
+                // Open About Activity
+            }
+
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+    }
+
+    private void syncProfileData() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+
+            // Get references to the Side Drawer Header views
+            android.view.View headerView = binding.navigationView.getHeaderView(0);
+            com.google.android.material.imageview.ShapeableImageView navAvatar = headerView.findViewById(R.id.nav_header_avatar);
+            android.widget.TextView navName = headerView.findViewById(R.id.nav_header_name);
+            android.widget.TextView navEmail = headerView.findViewById(R.id.nav_header_email);
+            android.view.View navStatusDot = headerView.findViewById(R.id.nav_header_status_dot);
+
+            FirebaseFirestore.getInstance().collection("users").document(uid)
+                    .addSnapshotListener((value, error) -> {
+                        if (value != null && value.exists()) {
+                            String profileImageUrl = value.getString("profileImageUrl");
+                            String name = value.getString("name");
+                            String email = value.getString("email");
+                            String status = value.getString("status");
+
+                            // 1. Update text in Drawer
+                            if (name != null) navName.setText(name);
+                            if (email != null) navEmail.setText(email);
+
+                            // 2. Load Image into BOTH avatars
+                            if (profileImageUrl != null) {
+                                Glide.with(this).load(profileImageUrl).placeholder(R.drawable.ic_profile).circleCrop().into(binding.ivProfileAvatar);
+                                Glide.with(this).load(profileImageUrl).placeholder(R.drawable.ic_profile).circleCrop().into(navAvatar);
+                            }
+
+                            // 3. Handle Active Status
+                            if ("active".equals(status)) {
+                                binding.ivProfileAvatar.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                                navStatusDot.setVisibility(android.view.View.VISIBLE);
+                            } else {
+                                binding.ivProfileAvatar.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#9E9E9E"))); // Grey if offline
+                                navStatusDot.setVisibility(android.view.View.GONE);
+                            }
+                        }
+                    });
+        }
+    }
+
+    // ── Profile Avatar ───────────────────────────────────────────────────────
 
     private void setupProfileAvatar() {
         binding.ivProfileAvatar.setOnClickListener(v -> {
-            // Sync the bottom nav indicator with the programmatic navigation.
             if (currentNavId != R.id.nav_profile) {
                 currentNavId = R.id.nav_profile;
                 binding.bottomNavigation.setSelectedItemId(R.id.nav_profile);
-                // setSelectedItemId fires the listener which calls loadFragment.
             }
         });
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  Fragment Helpers
-    // ════════════════════════════════════════════════════════════════════════
+    private void updateToolbarProfileIcon() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+
+            FirebaseFirestore.getInstance().collection("users").document(uid)
+                    .addSnapshotListener((value, error) -> {
+                        if (value != null && value.exists()) {
+                            String profileImageUrl = value.getString("profileImageUrl");
+
+                            // Use Glide to load the image into the toolbar icon
+                            Glide.with(this)
+                                    .load(profileImageUrl)
+                                    .placeholder(R.drawable.ic_profile) // Fallback
+                                    .circleCrop()
+                                    .into(binding.ivProfileAvatar);
+
+                            // Optional: Change stroke color based on a 'status' field in Firebase
+                            String status = value.getString("status");
+                            if ("active".equals(status)) {
+                                binding.ivProfileAvatar.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                            }
+                        }
+                    });
+        }
+    }
+
+    // ── Fragment Loading with MaterialFadeThrough transition ─────────────────
 
     /**
-     * Replaces the fragment container contents.
-     * Uses replace() so only one fragment is ever active at a time, keeping
-     * memory usage low for an informational app.
+     * MaterialFadeThrough: the outgoing fragment fades + scales down,
+     * the incoming fragment fades + scales up. This is the M3-standard
+     * transition for unrelated destinations (e.g. Market → Profile).
      */
     private void loadFragment(Fragment fragment) {
+        MaterialFadeThrough fadeThrough = new MaterialFadeThrough();
+
+        fragment.setEnterTransition(fadeThrough);
+        fragment.setExitTransition(new MaterialFadeThrough());
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .setReorderingAllowed(true)          // Required for predictive back
+                .setReorderingAllowed(true)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
-    /** Maps a nav menu item ID to the corresponding Fragment instance. */
     private Fragment buildFragmentFor(int navId) {
         if (navId == R.id.nav_alerts)  return new AlertsFragment();
         if (navId == R.id.nav_history) return new HistoryFragment();
         if (navId == R.id.nav_profile) return new ProfileFragment();
-        return new MarketFragment(); // default / nav_market
+        return new MarketFragment();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

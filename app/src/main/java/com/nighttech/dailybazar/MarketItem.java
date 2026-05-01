@@ -1,15 +1,8 @@
 package com.nighttech.dailybazar;
 
 /**
- * MarketItem — immutable data model for a single product in the price grid.
- *
- * Fields
- * ──────
- *  name        : display name (e.g. "Tomato")
- *  price       : formatted price string (e.g. "Rs. 120/kg")
- *  imageResId  : drawable resource ID for the product thumbnail
- *  isTrendUp   : true → green up-arrow, false → red down-arrow
- *  category    : used for future filtering (e.g. "Vegetable", "Grain")
+ * MarketItem — data model for a market price product.
+ * imageUrl is a Firebase Storage URL; imageResId is fallback for local data.
  */
 public class MarketItem {
 
@@ -18,7 +11,9 @@ public class MarketItem {
     private final int    imageResId;
     private final boolean isTrendUp;
     private final String category;
+    private String imageUrl; // Firebase Storage URL (nullable)
 
+    // Constructor for local/dummy data
     public MarketItem(String name, String price, int imageResId,
                       boolean isTrendUp, String category) {
         this.name       = name;
@@ -26,13 +21,31 @@ public class MarketItem {
         this.imageResId = imageResId;
         this.isTrendUp  = isTrendUp;
         this.category   = category;
+        this.imageUrl   = null;
     }
 
-    // ── Getters ──────────────────────────────────────────────────────────────
+    // Constructor for Firebase data
+    public MarketItem(String name, String price, String imageUrl,
+                      boolean isTrendUp, String category) {
+        this.name       = name;
+        this.price      = price;
+        this.imageResId = 0;
+        this.isTrendUp  = isTrendUp;
+        this.category   = category;
+        this.imageUrl   = imageUrl;
+    }
+
+    // Required no-arg constructor for Firestore deserialization
+    public MarketItem() {
+        this.name = ""; this.price = ""; this.imageResId = 0;
+        this.isTrendUp = false; this.category = "";
+    }
 
     public String  getName()       { return name; }
     public String  getPrice()      { return price; }
     public int     getImageResId() { return imageResId; }
     public boolean isTrendUp()     { return isTrendUp; }
     public String  getCategory()   { return category; }
+    public String  getImageUrl()   { return imageUrl; }
+    public void    setImageUrl(String url) { this.imageUrl = url; }
 }

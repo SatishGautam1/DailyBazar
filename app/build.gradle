@@ -36,6 +36,7 @@ android {
 dependencies {
     // UI Libraries
     implementation libs.appcompat
+    implementation libs.google.material
     implementation libs.material
     implementation libs.constraintlayout
     implementation libs.coordinatorlayout
@@ -50,13 +51,29 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
-    // Firebase
+    // Firebase BOM (manages all Firebase versions together)
     implementation platform(libs.firebase.bom)
-    implementation libs.google.firebase.analytics
-    // Add the dependencies for the products you want to use
-    // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation libs.firebase.auth
     implementation libs.firebase.firestore
-    implementation libs.firebase.analytics
+    implementation libs.firebase.storage
+
+    // FirebaseUI for Firestore RecyclerAdapter
+    implementation libs.firebase.ui.firestore
+
+    // Glide for image loading
+    implementation libs.glide
+    annotationProcessor libs.compiler
+
+    // Shimmer skeleton loading effect
+    implementation libs.shimmer
+
+    // Lottie animations for bottom nav
+    implementation libs.lottie
+
+    // SwipeRefreshLayout for profile
+    implementation libs.swiperefreshlayout
+
+    // RecyclerView
+    implementation libs.recyclerview
 
 }

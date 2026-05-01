@@ -83,4 +83,16 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <!-- Shimmer card shape -->
+    <style name="ShapeAppearance.App.Card.Large" parent="ShapeAppearance.Material3.Corner.Large" />
+
+    <!-- Bottom sheet rounded top -->
+    <style name="Widget.DailyBazar.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="shapeAppearance">@style/ShapeAppearance.DailyBazar.BottomSheet</item>
+    </style>
+    <style name="ShapeAppearance.DailyBazar.BottomSheet" parent="ShapeAppearance.Material3.Corner.Large">
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
 </resources>

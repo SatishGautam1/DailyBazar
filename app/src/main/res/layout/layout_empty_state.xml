@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Reusable empty state layout.
+    Set via binding: emptyState.tvEmptyTitle.setText(R.string.alerts_empty_title) etc.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <!-- Circular container for icon -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        app:cardCornerRadius="48dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer">
+
+        <ImageView
+            android:id="@+id/iv_empty_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_notifications"
+            app:tint="?attr/colorOnSurfaceVariant"
+            android:contentDescription="Empty state" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tv_empty_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/alerts_empty_title"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:textColor="?attr/colorOnSurface"
+        android:fontFamily="@font/montserrat_semibold"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/tv_empty_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/alerts_empty_subtitle"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:fontFamily="@font/mukta_regular"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.4" />
+
+</LinearLayout>

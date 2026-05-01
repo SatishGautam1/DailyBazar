@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_calculator"
+            android:icon="@drawable/ic_calculate"
+            android:title="Price Calculator" />
+    </group>
+
+    <item android:title="Support &amp; Legal">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_info"
+                android:title="About Night Tech" />
+            <item
+                android:id="@+id/nav_privacy"
+                android:icon="@drawable/ic_privacy"
+                android:title="Privacy Policy" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Sign Out" />
+        </menu>
+    </item>
+
+</menu>
