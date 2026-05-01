@@ -6,25 +6,22 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="false"
+    tools:context=".ui.activities.MainActivity">
 
-    <!-- Main Content Container -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/colorBackground"
-        tools:context=".ui.activities.MainActivity">
+        android:background="?android:attr/colorBackground">
 
-        <!-- Top App Bar -->
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="false"
             android:background="?attr/colorSurface"
-            app:liftOnScroll="true"
-            app:liftOnScrollTargetViewId="@id/fragment_container">
+            app:liftOnScroll="true">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -32,33 +29,54 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorSurface"
                 app:title="@string/app_name"
-                app:navigationIcon="@drawable/ic_menu"
                 app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_profile_avatar"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="end"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="Profile"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_profile"
-                    android:padding="2dp"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
-                    app:strokeColor="#2E7D32"
-                    app:strokeWidth="2.5dp" />
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="2dp" />
+
             </com.google.android.material.appbar.MaterialToolbar>
+
         </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- Fragment Container -->
+        <!--
+            FIX: fragment_container must sit between AppBar and BottomNav.
+            Use layout_behavior for top, and layout_marginBottom pegged to
+            the BottomNavigationView height (56dp standard + system nav inset
+            which MainActivity.applyWindowInsets() adds at runtime).
+            Do NOT use match_parent height — that ignores the bottom nav.
+        -->
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="56dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <!-- Bottom Navigation -->
+        <!-- FAB -->
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_add_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="72dp"
+            android:text="Add Item"
+            android:fontFamily="@font/mukta_medium"
+            android:visibility="gone"
+            app:icon="@drawable/ic_storefront"
+            app:iconTint="?attr/colorOnPrimary" />
+
+        <!-- BottomNavigationView — always at the true bottom -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
@@ -68,17 +86,20 @@
             app:elevation="8dp"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/menu_bottom_nav"
+            app:itemActiveIndicatorStyle="@style/Widget.DailyBazar.BottomNav.ActiveIndicator"
             style="@style/Widget.Material3.BottomNavigationView" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!-- The Side Navigation Drawer (MUST be outside CoordinatorLayout) -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/drawer_menu" />
+        app:menu="@menu/drawer_menu"
+        app:itemTextColor="?attr/colorOnSurface"
+        app:itemIconTint="?attr/colorPrimary" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

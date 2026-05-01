@@ -36,14 +36,11 @@ public class ProfileFragment extends Fragment {
     private DocumentReference userRef;
     private FirebaseUser currentUser;
 
-    // Cached values passed to the edit sheet
     private String currentName  = "";
     private String currentPhone = "";
     private String currentPref  = "";
 
-    // ─────────────────────────────────────────────────────────────
-    //  Lifecycle
-    // ─────────────────────────────────────────────────────────────
+    // ── Lifecycle ────────────────────────────────────────────────────────────
 
     @Nullable
     @Override
@@ -77,18 +74,15 @@ public class ProfileFragment extends Fragment {
         binding = null;
     }
 
-    // ─────────────────────────────────────────────────────────────
-    //  SwipeRefresh
-    // ─────────────────────────────────────────────────────────────
+    // ── SwipeRefresh ─────────────────────────────────────────────────────────
 
     private void setupSwipeRefresh() {
+        // XML id: swipe_refresh_profile → binding field: swipeRefreshProfile
         binding.swipeRefreshProfile.setColorSchemeResources(R.color.brand_primary);
         binding.swipeRefreshProfile.setOnRefreshListener(this::loadUserData);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    //  Data Loading
-    // ─────────────────────────────────────────────────────────────
+    // ── Data Loading ──────────────────────────────────────────────────────────
 
     private void loadUserData() {
         if (currentUser == null || userRef == null) {
@@ -96,8 +90,11 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
-        // Show email immediately from Auth (no Firestore round-trip needed)
-        safeSetText(currentUser.getEmail(), binding.tvProfileEmail, "—");
+        // Show email immediately — no Firestore round-trip needed
+        if (binding != null && binding.tvProfileEmail != null) {
+            binding.tvProfileEmail.setText(
+                    currentUser.getEmail() != null ? currentUser.getEmail() : "—");
+        }
 
         userRef.get()
                 .addOnSuccessListener(doc -> {
@@ -108,7 +105,6 @@ public class ProfileFragment extends Fragment {
                         populateUI(doc);
                         updateLastSynced();
                     } else {
-                        // Document not yet created — show safe defaults
                         binding.tvProfileName.setText("User");
                         binding.tvProfilePhone.setText("Not set");
                         binding.tvMemberDate.setText("—");
@@ -118,31 +114,23 @@ public class ProfileFragment extends Fragment {
                 .addOnFailureListener(e -> {
                     stopRefreshing();
                     if (!isAdded() || binding == null) return;
-                    // Show the real Firebase error so it's actionable
                     Toast.makeText(getContext(),
                             "Could not load profile: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
                 });
     }
 
-    /**
-     * Populates every view from a Firestore snapshot.
-     *
-     * KEY FIX: SignUpActivity originally wrote the name under "fullName",
-     * but EditProfileBottomSheet writes it under "name". We read "name"
-     * first and fall back to "fullName" so both old and new accounts work.
-     */
     private void populateUI(DocumentSnapshot doc) {
-        // Name — prefer "name" (written by EditProfile), fall back to "fullName" (written by SignUp)
+        // "name" is primary; fall back to "fullName" for old accounts
         String name = doc.getString("name");
         if (name == null || name.isEmpty()) name = doc.getString("fullName");
         currentName = (name != null) ? name : "";
 
-        currentPhone = or(doc.getString("phone"), "");
-        currentPref  = or(doc.getString("marketPreference"), "");
+        currentPhone = orEmpty(doc.getString("phone"));
+        currentPref  = orEmpty(doc.getString("marketPreference"));
 
-        // "createdAt" is a server timestamp; SignUpActivity now stores a formatted string
-        // under "memberSince". Fall back to the raw field if the new field isn't there yet.
+        // "memberSince" is a formatted string written by SignUpActivity;
+        // fall back to "createdAt" for older accounts
         String memberSince = doc.getString("memberSince");
         if (memberSince == null || memberSince.isEmpty()) {
             memberSince = doc.getString("createdAt");
@@ -152,7 +140,8 @@ public class ProfileFragment extends Fragment {
 
         binding.tvProfileName.setText(currentName.isEmpty() ? "User" : currentName);
         binding.tvProfilePhone.setText(currentPhone.isEmpty() ? "Not set" : currentPhone);
-        binding.tvMemberDate.setText((memberSince != null && !memberSince.isEmpty()) ? memberSince : "—");
+        binding.tvMemberDate.setText(
+                (memberSince != null && !memberSince.isEmpty()) ? memberSince : "—");
         binding.tvMarketPreference.setText(currentPref.isEmpty() ? "Not set" : currentPref);
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
@@ -160,18 +149,11 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void safeSetText(String value, android.widget.TextView tv, String fallback) {
-        if (binding != null && tv != null) {
-            tv.setText((value != null && !value.isEmpty()) ? value : fallback);
-        }
-    }
-
-    // ─────────────────────────────────────────────────────────────
-    //  Image via Glide
-    // ─────────────────────────────────────────────────────────────
+    // ── Avatar ────────────────────────────────────────────────────────────────
 
     private void loadProfileImage(String url) {
         if (!isAdded() || getContext() == null || binding == null) return;
+        // XML id: iv_big_avatar → binding field: ivBigAvatar
         Glide.with(requireContext())
                 .load(url)
                 .placeholder(R.drawable.ic_profile)
@@ -180,23 +162,22 @@ public class ProfileFragment extends Fragment {
                 .into(binding.ivBigAvatar);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    //  Last Synced
-    // ─────────────────────────────────────────────────────────────
+    // ── Last Synced ───────────────────────────────────────────────────────────
 
     private void updateLastSynced() {
         if (binding == null) return;
         String time = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
+        // XML id: tv_last_synced → binding field: tvLastSynced
         binding.tvLastSynced.setText("Last synced: " + time);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    //  Buttons
-    // ─────────────────────────────────────────────────────────────
+    // ── Buttons ───────────────────────────────────────────────────────────────
 
     private void setupButtons() {
+        // XML id: btn_edit_profile → binding field: btnEditProfile
         binding.btnEditProfile.setOnClickListener(v -> openEditBottomSheet());
 
+        // XML id: btn_logout → binding field: btnLogout
         binding.btnLogout.setOnClickListener(v -> {
             binding.btnLogout.setText("Signing out…");
             binding.btnLogout.setEnabled(false);
@@ -215,19 +196,22 @@ public class ProfileFragment extends Fragment {
     private void openEditBottomSheet() {
         EditProfileBottomSheet sheet = EditProfileBottomSheet.newInstance(
                 currentName, currentPref, currentPhone);
-        sheet.setOnSaveListener((newName, newPref, newImageUrl) -> loadUserData());
+        sheet.setOnSaveListener((newName, newPref, newImageUrl) -> {
+            loadUserData();
+            if (newImageUrl != null && !newImageUrl.isEmpty()) {
+                loadProfileImage(newImageUrl);
+            }
+        });
         sheet.show(getChildFragmentManager(), EditProfileBottomSheet.TAG);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    //  Helpers
-    // ─────────────────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private void stopRefreshing() {
         if (binding != null) binding.swipeRefreshProfile.setRefreshing(false);
     }
 
-    private static String or(@Nullable String value, String fallback) {
-        return (value != null) ? value : fallback;
+    private static String orEmpty(@Nullable String value) {
+        return value != null ? value : "";
     }
 }

@@ -36,6 +36,7 @@ android {
 dependencies {
     // UI Libraries
     implementation libs.appcompat
+    implementation libs.firebase.database
     implementation libs.google.material
     implementation libs.constraintlayout
     implementation libs.coordinatorlayout
@@ -53,6 +54,7 @@ dependencies {
     // Firebase BOM (manages all Firebase versions together)
     implementation platform(libs.firebase.bom)
     implementation libs.firebase.auth
+    implementation libs.firebase.database
     implementation libs.firebase.firestore
     implementation libs.firebase.storage
 
@@ -74,5 +76,11 @@ dependencies {
 
     // RecyclerView
     implementation libs.recyclerview
+
+    implementation libs.cloudinary.android
+
+    implementation libs.google.firebase.database
+    implementation libs.com.google.firebase.firebase.database
+
 
 }

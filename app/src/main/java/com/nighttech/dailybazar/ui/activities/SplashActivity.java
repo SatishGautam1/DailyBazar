@@ -10,6 +10,8 @@ import android.view.animation.OvershootInterpolator;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.nighttech.dailybazar.R;
 import com.nighttech.dailybazar.databinding.ActivitySplashBinding;
 
@@ -21,21 +23,25 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Draw behind status bar — the green theme background covers it seamlessly
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         binding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Pre-hide all animated elements so they start invisible
         hideAll();
-
-        // Staggered entrance: logo → name → divider → tagline → bottom
         new Handler(Looper.getMainLooper()).postDelayed(this::playEntranceAnimations, 100);
 
-        // Navigate after delay
+        // FIX: Check if user is already signed in and route accordingly
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            Class<?> destination = (currentUser != null) ? MainActivity.class : LoginActivity.class;
+
+            Intent intent = new Intent(SplashActivity.this, destination);
+            // If going to MainActivity, clear the back stack so Back doesn't return to splash
+            if (currentUser != null) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            }
+            startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_in);
             finish();
         }, SPLASH_DELAY_MS);
@@ -59,46 +65,32 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void playEntranceAnimations() {
-        // 1. Logo: zoom in with overshoot bounce
         binding.ivLogo.animate()
-                .alpha(1f)
-                .scaleX(1f)
-                .scaleY(1f)
+                .alpha(1f).scaleX(1f).scaleY(1f)
                 .setDuration(650)
                 .setInterpolator(new OvershootInterpolator(1.4f))
                 .start();
 
-        // 2. App name: slides up and fades in
         binding.tvAppName.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setStartDelay(400)
-                .setDuration(500)
+                .alpha(1f).translationY(0f)
+                .setStartDelay(400).setDuration(500)
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
 
-        // 3. Gold divider: expands from center
         binding.dividerGold.animate()
-                .alpha(1f)
-                .scaleX(1f)
-                .setStartDelay(650)
-                .setDuration(400)
+                .alpha(1f).scaleX(1f)
+                .setStartDelay(650).setDuration(400)
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
 
-        // 4. Tagline: fades in gently
         binding.tvTagline.animate()
                 .alpha(0.72f)
-                .setStartDelay(800)
-                .setDuration(450)
+                .setStartDelay(800).setDuration(450)
                 .start();
 
-        // 5. Bottom section: slides up and fades in
         binding.bottomSection.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setStartDelay(950)
-                .setDuration(500)
+                .alpha(1f).translationY(0f)
+                .setStartDelay(950).setDuration(500)
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
     }

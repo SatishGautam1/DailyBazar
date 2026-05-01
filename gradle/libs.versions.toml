@@ -1,9 +1,11 @@
 [versions]
 agp = "9.2.0"
 appcompat = "1.7.0"
+cloudinaryAndroid = "3.1.2"
 compiler = "5.0.7"
 firebaseBom = "34.12.0"
 firebaseBomVersion = "33.1.0"
+firebaseDatabase = "22.0.1"
 firebaseUiFirestore = "9.1.1"
 glide = "5.0.7"
 lottie = "6.7.1"
@@ -26,9 +28,12 @@ materialVersion = "1.13.0"
 [libraries]
 # UI & Layout
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }
+com-google-firebase-firebase-database = { module = "com.google.firebase:firebase-database", version.ref = "firebaseDatabase" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-database = { module = "com.google.firebase:firebase-database" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-bom-v3310 = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
@@ -37,6 +42,7 @@ firebase-ui-firestore = { module = "com.firebaseui:firebase-ui-firestore", versi
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 google-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth" }
+google-firebase-database = { module = "com.google.firebase:firebase-database" }
 google-firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
