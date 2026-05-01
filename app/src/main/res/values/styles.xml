@@ -31,7 +31,7 @@
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.DailyBazar.Button</item>
     </style>
 
-    <style name="ShapeAppearance.DailyBazar.Button" parent="">
+    <style name="ShapeAppearance.DailyBazar.Button" parent="ShapeAppearance.Material3.Corner.Medium">
         <item name="cornerSize">14dp</item>
     </style>
 

@@ -17,11 +17,12 @@
             android:id="@+id/nav_header_avatar"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:src="@drawable/ic_profile"
+            android:padding="2dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
             app:strokeColor="@android:color/white"
-            app:strokeWidth="2dp" />
+            app:strokeWidth="2.5dp" />
 
         <!-- The Green Active Status Dot -->
         <View

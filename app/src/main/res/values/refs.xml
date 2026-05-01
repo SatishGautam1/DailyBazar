@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Placeholder for sync icon until a custom one is added -->
+    <item name="ic_sync" type="drawable">@android:drawable/stat_notify_sync</item>
+</resources>

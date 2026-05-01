@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- ╔══════════════════════════════════════╗
-         ║     BASE APPLICATION THEME           ║
-         ╚══════════════════════════════════════╝ -->
+    <!-- Base Application Theme -->
     <style name="Theme.DailyBazar" parent="Theme.Material3.Light.NoActionBar">
-
         <!-- Brand palette -->
         <item name="colorPrimary">@color/brand_primary</item>
         <item name="colorOnPrimary">@color/brand_on_primary</item>
@@ -33,63 +30,40 @@
         <item name="colorOutline">@color/md3_outline_light</item>
         <item name="colorOutlineVariant">@color/md3_outline_variant_light</item>
 
-        <!-- Edge-to-edge -->
+        <!-- Edge-to-edge (Using android: namespace for transparency) -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/transparent</item>
-        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
-
-        <!-- Keyboard: content resizes so it's always visible above keyboard -->
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <!-- ╔══════════════════════════════════════╗
-         ║     SPLASH THEME                     ║
-         ╚══════════════════════════════════════╝ -->
+    <!-- Splash Theme -->
     <style name="Theme.DailyBazar.Splash" parent="Theme.DailyBazar">
         <item name="android:windowBackground">@color/brand_primary</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
-        <!-- Splash doesn't need keyboard -->
         <item name="android:windowSoftInputMode">stateHidden</item>
     </style>
 
-    <!-- ╔══════════════════════════════════════╗
-         ║     COMPONENT STYLES                 ║
-         ╚══════════════════════════════════════╝ -->
-
-    <!-- BottomNav active indicator pill -->
-    <style name="Widget.DailyBazar.BottomNav.ActiveIndicator"
-        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+    <!-- Component Styles -->
+    <style name="Widget.DailyBazar.BottomNav.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/brand_primary_container</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
     </style>
 
-    <!-- Section chip/badge -->
-    <style name="Widget.DailyBazar.SectionBadge" parent="">
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">12dp</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:letterSpacing">0.12</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
-
-    <!-- Circular Image Shape Appearance -->
-    <style name="ShapeAppearance.App.CircleImageView" parent="">
+    <style name="ShapeAppearance.App.CircleImageView" parent="ShapeAppearance.Material3.Corner.Medium">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
 
-    <!-- Shimmer card shape -->
     <style name="ShapeAppearance.App.Card.Large" parent="ShapeAppearance.Material3.Corner.Large" />
 
-    <!-- Bottom sheet rounded top -->
     <style name="Widget.DailyBazar.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
         <item name="shapeAppearance">@style/ShapeAppearance.DailyBazar.BottomSheet</item>
     </style>
+
     <style name="ShapeAppearance.DailyBazar.BottomSheet" parent="ShapeAppearance.Material3.Corner.Large">
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>

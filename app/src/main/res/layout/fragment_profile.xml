@@ -6,17 +6,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--
+        KEY FIX: fillViewport="true" forces NestedScrollView to stretch its child
+        to at least the viewport height. Without this, on tall devices the LinearLayout
+        wraps short content and the NestedScrollView never enables scrolling, so the
+        Logout button at the bottom falls outside the visible area.
+        overScrollMode="always" lets pull-to-refresh co-exist with scrolling.
+    -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/colorBackground"
-        android:overScrollMode="never">
+        android:fillViewport="true"
+        android:overScrollMode="always"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="96dp">
+            android:paddingBottom="120dp">
+            <!--
+                paddingBottom 120dp (up from 96dp) ensures the Logout button clears
+                the bottom navigation bar even on devices with a tall nav bar + gesture nav.
+            -->
 
             <!-- ── 1. PROFILE HEADER BAND ──────────── -->
             <LinearLayout
@@ -32,11 +45,13 @@
                     android:id="@+id/iv_big_avatar"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
+                    android:padding="2dp"
                     android:src="@drawable/ic_profile"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
                     app:strokeColor="?attr/colorPrimary"
-                    app:strokeWidth="3dp" />
+                    app:strokeWidth="2.5dp"
+                    app:elevation="4dp" />
 
                 <TextView
                     android:id="@+id/tv_profile_name"
@@ -125,7 +140,31 @@
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                         android:fontFamily="@font/mukta_regular" />
 
-                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="14dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <!-- Phone row -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phone Number"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                        android:fontFamily="@font/mukta_medium"
+                        android:textColor="?attr/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/tv_profile_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Not set"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:fontFamily="@font/mukta_regular" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
@@ -151,7 +190,6 @@
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                         android:fontFamily="@font/mukta_regular" />
 
-                    <!-- Divider -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
